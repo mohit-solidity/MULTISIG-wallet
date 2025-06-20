@@ -93,13 +93,6 @@ contract MULTISIG{
         balance[msg.sender] += msg.value;
         emit Deposit(msg.sender, msg.value);
     }
-    function withdraw(uint amount) public noReenterancy{
-        if(amount>balance[msg.sender]) revert NotEnoughBalance();
-        (bool success, ) = payable(msg.sender).call{value:amount}("");
-        balance[msg.sender] -= amount;
-        require(success,"transaction Failed");
-        emit Withdraw(msg.sender, amount);
-    }
     function makeRequest(address to,uint amount,uint deadline_DAYS) public onlyOwners{
         requests[totalRequests] = Request(to,msg.sender,amount,block.timestamp,block.timestamp+deadline_DAYS*1 days,false,false,0);
         totalRequests++;
